@@ -1,3 +1,7 @@
-function plurify(input, arguments) {
-	return input || "";
-}
+(function(window) {
+
+	window.plurify = function(input) {
+		return input || "";
+	}
+
+})(window);
