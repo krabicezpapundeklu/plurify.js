@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<script type="text/javascript" src="plurify.js"></script>
+
+		<style type="text/css">
+			table {
+				border-collapse: collapse;
+			}
+
+			td {
+				border: 1px solid black;
+				font-family: verdana,tahoma,arial;
+				font-size: 12px;
+				padding: 3px;
+			}
+
+			thead {
+				font-weight: bold;
+			}
+
+			.fail {
+				color: red;
+			}
+
+			.success {
+				color: green;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 id="summary"></h1>
+		<table>
+			<thead>
+				<tr><td>Input</td><td>Arguments</td><td>Expected Output</td><td>Output</td></tr>
+			</thead>
+			<tbody id="test-results"></tbody>
+		</table>
+
+		<script type="text/javascript">
+			var tests = [
+				{expectedOutput: ""},
+				{input: null, arguments: null, expectedOutput: ""},
+				{input: "xxx", arguments: null, expectedOutput: "xxx"}
+			];
+
+			var startDate = new Date();
+
+			for(var i = 0; i < tests.length; ++i) {
+				var test = tests[i];
+				test.output = plurify(test.input, test.arguments);
+			}
+
+			var duration = new Date() - startDate;
+			var failed = 0;
+			var succeeded = 0;
+			var resultHtml = [];
+
+			for(var i = 0; i < tests.length; ++i) {
+				var test = tests[i];
+				var success = test.expectedOutput == test.output;
+
+				if(success) {
+					++succeeded;
+				}
+				else {
+					++failed;
+				}
+
+				resultHtml.push("<tr class='" + (success ? "success" : "fail") + "'>");
+				resultHtml.push("<td>" + test.input + "</td>");
+				resultHtml.push("<td>" + test.arguments + "</td>");
+				resultHtml.push("<td>" + test.expectedOutput + "</td>");
+				resultHtml.push("<td>" + test.output + "</td>");
+				resultHtml.push("</tr>");
+			}
+
+			document.getElementById("test-results").innerHTML = resultHtml.join("");
+
+			var summary = document.getElementById("summary");
+
+			summary.className = failed > 0 ? "fail" : "success";
+			summary.innerHTML = succeeded + " succeeded, " + failed + " failed (in " + duration + "ms)";
+		</script>
+	</body>
+</html>
