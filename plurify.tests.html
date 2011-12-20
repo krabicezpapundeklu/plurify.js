@@ -33,7 +33,7 @@
 			<thead>
 				<tr><td>Input</td><td>Arguments</td><td>Expected Output</td><td>Output</td></tr>
 			</thead>
-			<tbody id="test-results"></tbody>
+			<tbody id="results"></tbody>
 		</table>
 
 		<script type="text/javascript">
@@ -74,10 +74,13 @@
 				resultHtml.push("</tr>");
 			}
 
-			document.getElementById("test-results").innerHTML = resultHtml.join("");
+			var ieHackNode = document.createElement("div");
+			ieHackNode.innerHTML = "<table>" + resultHtml.join("") + "</table>";
+
+			var results = document.getElementById("results");
+			results.parentNode.replaceChild(ieHackNode.firstChild.firstChild, results);
 
 			var summary = document.getElementById("summary");
-
 			summary.className = failed > 0 ? "fail" : "success";
 			summary.innerHTML = succeeded + " succeeded, " + failed + " failed (in " + duration + "ms)";
 		</script>
