@@ -1,7 +1,15 @@
 (function() {
 	function parseExpression(input, position, parameters, builder) {
 		var closeBracket = input.indexOf("}", position);
-		builder.push(parameters[input.slice(position + 1, closeBracket)]);
+		var parameterNameParts = input.slice(position + 1, closeBracket).split(".");
+		var parameter = parameters;
+
+		for(var i = 0; i < parameterNameParts.length; ++i) {
+			parameter = parameter[parameterNameParts[i]];
+		}
+
+		builder.push(parameter);
+
 		return closeBracket + 1;
 	}
 
@@ -50,5 +58,4 @@
 
 		return "";
 	}
-
 })();
