@@ -44,7 +44,10 @@
 				{input: "xxx", arguments: null, expectedOutput: "xxx"},
 				{input: "x{0}x", arguments: ["y"], expectedOutput: "xyx"},
 				{input: "x{0}x{1}x{2}x", arguments: [1, 2, 3], expectedOutput: "x1x2x3x"},
-				{input: "{firstName} {lastName}", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"}
+				{input: "{firstName} {lastName}", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"},
+				{input: "x\\{0}x", arguments: null, expectedOutput: "x{0}x"},
+				{input: "x\\\\{0}x", arguments: ["y"], expectedOutput: "x\\yx"},
+				{input: "x\\\\\\{0}x", arguments: null, expectedOutput: "x\\{0}x"}
 			];
 
 			var startDate = new Date();

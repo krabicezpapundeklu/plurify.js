@@ -17,8 +17,28 @@
 			var builder = [];
 
 			do {
-				builder.push(input.slice(position, openBracket));
-				position = parseExpression(input, openBracket, parameters, builder);
+				var backslashes = 0;
+
+				while(input.charAt(openBracket - backslashes - 1) === "\\") {
+					++backslashes;
+				}
+
+				if(backslashes > 0) {
+					builder.push(input.slice(position, openBracket - backslashes / 2));
+
+					if(backslashes & 1) {
+						builder.push("{");
+						position = openBracket + 1;
+					}
+					else {
+						position = parseExpression(input, openBracket, parameters, builder);
+					}
+				}
+				else {
+					builder.push(input.slice(position, openBracket));
+					position = parseExpression(input, openBracket, parameters, builder);
+				}
+
 				openBracket = input.indexOf("{", position);
 			}
 			while(openBracket !== -1);
