@@ -40,7 +40,10 @@
 			var tests = [
 				{expectedOutput: ""},
 				{input: null, arguments: null, expectedOutput: ""},
-				{input: "xxx", arguments: null, expectedOutput: "xxx"}
+				{input: "xxx", arguments: null, expectedOutput: "xxx"},
+				{input: "x{0}x", arguments: ["y"], expectedOutput: "xyx"},
+				{input: "x{0}x{1}x{2}x", arguments: [1, 2, 3], expectedOutput: "x1x2x3x"},
+				{input: "{firstName} {lastName}", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"}
 			];
 
 			var startDate = new Date();
