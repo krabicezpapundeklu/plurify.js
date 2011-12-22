@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<script type="text/javascript" src="json2.js"></script>
 		<script type="text/javascript" src="plurify.js"></script>
 
 		<style type="text/css">
@@ -71,7 +72,7 @@
 
 				resultHtml.push("<tr class='" + (success ? "success" : "fail") + "'>");
 				resultHtml.push("<td>" + test.input + "</td>");
-				resultHtml.push("<td>" + test.arguments + "</td>");
+				resultHtml.push("<td>" + JSON.stringify(test.arguments) + "</td>");
 				resultHtml.push("<td>" + test.expectedOutput + "</td>");
 				resultHtml.push("<td>" + test.output + "</td>");
 				resultHtml.push("</tr>");
