@@ -1,7 +1,6 @@
 <html>
 	<head>
 		<script type="text/javascript" src="json2.js"></script>
-		<script type="text/javascript" src="plurify.js"></script>
 
 		<style type="text/css">
 			table {
@@ -29,14 +28,6 @@
 		</style>
 	</head>
 	<body>
-		<h1 id="summary"></h1>
-		<table>
-			<thead>
-				<tr><td>Input</td><td>Arguments</td><td>Expected Output</td><td>Output</td></tr>
-			</thead>
-			<tbody id="results"></tbody>
-		</table>
-
 		<script type="text/javascript">
 			var tests = [
 				{expectedOutput: ""},
@@ -50,46 +41,89 @@
 				{input: "x\\\\\\{0}x", arguments: null, expectedOutput: "x\\{0}x"}
 			];
 
-			var startDate = new Date();
+			function runTests(summaryId, resultsId) {
+				var startDate = new Date();
 
-			for(var i = 0; i < tests.length; ++i) {
-				var test = tests[i];
-				test.output = plurify(test.input, test.arguments);
-			}
-
-			var duration = new Date() - startDate;
-			var failed = 0;
-			var succeeded = 0;
-			var resultHtml = [];
-
-			for(var i = 0; i < tests.length; ++i) {
-				var test = tests[i];
-				var success = test.expectedOutput == test.output;
-
-				if(success) {
-					++succeeded;
-				}
-				else {
-					++failed;
+				for(var i = 0; i < tests.length; ++i) {
+					var test = tests[i];
+					test.output = plurify(test.input, test.arguments);
 				}
 
-				resultHtml.push("<tr class='" + (success ? "success" : "fail") + "'>");
-				resultHtml.push("<td>" + test.input + "</td>");
-				resultHtml.push("<td>" + JSON.stringify(test.arguments) + "</td>");
-				resultHtml.push("<td>" + test.expectedOutput + "</td>");
-				resultHtml.push("<td>" + test.output + "</td>");
-				resultHtml.push("</tr>");
+				var duration = new Date() - startDate;
+				var failed = 0;
+				var succeeded = 0;
+				var resultHtml = [];
+
+				for(var i = 0; i < tests.length; ++i) {
+					var test = tests[i];
+					var success = test.expectedOutput == test.output;
+
+					if(success) {
+						++succeeded;
+					}
+					else {
+						++failed;
+					}
+
+					resultHtml.push("<tr class='" + (success ? "success" : "fail") + "'>");
+					resultHtml.push("<td>" + test.input + "</td>");
+					resultHtml.push("<td>" + JSON.stringify(test.arguments) + "</td>");
+					resultHtml.push("<td>" + test.expectedOutput + "</td>");
+					resultHtml.push("<td>" + test.output + "</td>");
+					resultHtml.push("</tr>");
+				}
+
+				var ieHackNode = document.createElement("div");
+				ieHackNode.innerHTML = "<table>" + resultHtml.join("") + "</table>";
+
+				var results = document.getElementById(resultsId);
+				results.parentNode.replaceChild(ieHackNode.firstChild.firstChild, results);
+
+				var summary = document.getElementById(summaryId);
+				summary.className = failed > 0 ? "fail" : "success";
+				summary.innerHTML = succeeded + " succeeded, " + failed + " failed (in " + duration + "ms)";
 			}
-
-			var ieHackNode = document.createElement("div");
-			ieHackNode.innerHTML = "<table>" + resultHtml.join("") + "</table>";
-
-			var results = document.getElementById("results");
-			results.parentNode.replaceChild(ieHackNode.firstChild.firstChild, results);
-
-			var summary = document.getElementById("summary");
-			summary.className = failed > 0 ? "fail" : "success";
-			summary.innerHTML = succeeded + " succeeded, " + failed + " failed (in " + duration + "ms)";
 		</script>
+
+		<table>
+			<thead>
+				<tr><td>"Normal"</td><td>Minified</td></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<h1 id="summary"></h1>
+						<table>
+							<thead>
+								<tr><td>Input</td><td>Arguments</td><td>Expected Output</td><td>Output</td></tr>
+							</thead>
+							<tbody id="results"></tbody>
+						</table>
+
+						<script type="text/javascript" src="plurify.js"></script>
+
+						<script type="text/javascript">
+							runTests("summary", "results");
+						</script>
+					</td>
+					<td>
+					<!-- minified version -->
+						<h1 id="summary-minified"></h1>
+						<table>
+							<thead>
+								<tr><td>Input</td><td>Arguments</td><td>Expected Output</td><td>Output</td></tr>
+							</thead>
+							<tbody id="results-minified"></tbody>
+						</table>
+
+						<script type="text/javascript" src="plurify-min.js"></script>
+
+						<script type="text/javascript">
+							runTests("summary-minified", "results-minified");
+						</script>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</body>
 </html>

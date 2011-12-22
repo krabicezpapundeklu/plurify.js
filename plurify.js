@@ -1,11 +1,11 @@
-(function(window) {
+(function() {
 	function parseExpression(input, position, parameters, builder) {
 		var closeBracket = input.indexOf("}", position);
 		builder.push(parameters[input.slice(position + 1, closeBracket)]);
 		return closeBracket + 1;
 	}
 
-	window.plurify = function(input, parameters) {
+	window["plurify"] = function(input, parameters) {
 		if(input) {
 			var position = 0;
 			var openBracket = input.indexOf("{", position);
@@ -51,4 +51,4 @@
 		return "";
 	}
 
-})(window);
+})();
