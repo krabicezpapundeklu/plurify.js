@@ -45,17 +45,8 @@
 		return "";
 	}
 
-	plurify["operations"] = {
-		"toLowerCase": function(x) {
-			return x.toLowerCase();
-		},
-
-		"toUpperCase": function(x) {
-			return x.toUpperCase();
-		}
-	}
-
 	window["plurify"] = plurify;
+	plurify["operations"] = {};
 
 	function parseExpression(input, position, parameters, builder) {
 		var closeBracket = input.indexOf("}", position);
@@ -72,7 +63,13 @@
 
 		if(colon !== -1) {
 			var operation = input.slice(colon + 1, closeBracket);
-			parameter = plurify["operations"][operation](parameter);
+
+			if(parameter[operation]) {
+				parameter = parameter[operation]();
+			}
+			else {
+				parameter = plurify["operations"][operation](parameter);
+			}
 		}
 
 		builder.push(parameter);
