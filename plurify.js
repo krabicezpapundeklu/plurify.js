@@ -1,27 +1,13 @@
 (function() {
-	function parseExpression(input, position, parameters, builder) {
-		var closeBracket = input.indexOf("}", position);
-		var parameterNameParts = input.slice(position + 1, closeBracket).split(".");
-		var parameter = parameters;
-
-		for(var i = 0; i < parameterNameParts.length; ++i) {
-			parameter = parameter[parameterNameParts[i]];
-		}
-
-		builder.push(parameter);
-
-		return closeBracket + 1;
-	}
-
-	window["plurify"] = function(input, parameters) {
+	var plurify = function(input, parameters) {
 		if(input) {
-			var position = 0;
-			var openBracket = input.indexOf("{", position);
+			var openBracket = input.indexOf("{", 0);
 
 			if(openBracket === -1) {
 				return input;
 			}
 
+			var position = 0;
 			var builder = [];
 
 			do {
@@ -57,5 +43,40 @@
 		}
 
 		return "";
+	}
+
+	plurify["operations"] = {
+		"toLowerCase": function(x) {
+			return x.toLowerCase(x);
+		},
+
+		"toUpperCase": function(x) {
+			return x.toUpperCase();
+		}
+	}
+
+	window["plurify"] = plurify;
+
+	function parseExpression(input, position, parameters, builder) {
+		var closeBracket = input.indexOf("}", position);
+		var colon = input.indexOf(":", position);
+
+		var parameterNameEnd = colon === -1 ? closeBracket : Math.min(closeBracket, colon);
+
+		var parameterNameParts = input.slice(position + 1, parameterNameEnd).split(".");
+		var parameter = parameters;
+
+		for(var i = 0; i < parameterNameParts.length; ++i) {
+			parameter = parameter[parameterNameParts[i]];
+		}
+
+		if(colon !== -1) {
+			var operation = input.slice(colon + 1, closeBracket);
+			parameter = plurify["operations"][operation](parameter);
+		}
+
+		builder.push(parameter);
+
+		return closeBracket + 1;
 	}
 })();

@@ -40,10 +40,17 @@
 				{input: "x\\\\{0}x", arguments: ["y"], expectedOutput: "x\\yx"},
 				{input: "x\\\\\\{0}x", arguments: null, expectedOutput: "x\\{0}x"},
 				{input: "{data.firstName} {data.lastName}", arguments: {data: {firstName: "John", lastName: "Doe"}}, expectedOutput: "John Doe"},
-				{input: "x{0.value}x", arguments: [{value: "y"}], expectedOutput: "xyx"}
+				{input: "x{0.value}x", arguments: [{value: "y"}], expectedOutput: "xyx"},
+				{input: "x{0:toLowerCase}x", arguments: ["Y"], expectedOutput: "xyx"},
+				{input: "x{0:toUpperCase}x", arguments: ["y"], expectedOutput: "xYx"},
+				{input: "x{0:wrap}x", arguments: ["y"], expectedOutput: "x*y*x"}
 			];
 
 			function runTests(summaryId, resultsId) {
+				plurify.operations["wrap"] = function(x) {
+					return "*" + x + "*";
+				}
+
 				var startDate = new Date();
 
 				for(var i = 0; i < tests.length; ++i) {
