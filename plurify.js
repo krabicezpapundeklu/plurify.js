@@ -47,7 +47,7 @@
 
 	plurify["operations"] = {
 		"toLowerCase": function(x) {
-			return x.toLowerCase(x);
+			return x.toLowerCase();
 		},
 
 		"toUpperCase": function(x) {
