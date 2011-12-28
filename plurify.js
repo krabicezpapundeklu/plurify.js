@@ -6,7 +6,7 @@
 	(window["plurify"] = plurify)["operations"] = {};
 
 	function parseExpression(input, parameters) {
-		return input.replace(/^([^:}]*)([:}])([\s\S]*)/, function(match, parameterName, colonOrBracket, restOfInput) {
+		return input.replace(/^\s*([^:}\s]*)\s*([:}])([\s\S]*)/, function(match, parameterName, colonOrBracket, restOfInput) {
 			var parameterNameParts = parameterName.split(".");
 			var parameter = parameters;
 
@@ -15,7 +15,7 @@
 			}
 
 			if(colonOrBracket === ":") {
-				restOfInput = restOfInput.replace(/^([^}]*)}/, function(match, operation) {
+				restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operation) {
 					if(parameter[operation]) {
 						parameter = parameter[operation]();
 					}

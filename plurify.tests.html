@@ -45,7 +45,10 @@
 				{input: "x{0:toLowerCase}x", arguments: ["Y"], expectedOutput: "xyx"},
 				{input: "x{0:toUpperCase}x", arguments: ["y"], expectedOutput: "xYx"},
 				{input: "x{0:wrap}x", arguments: ["y"], expectedOutput: "x*y*x"},
-				{input: "{data.lastName:toUpperCase}, {data.firstName}", arguments: {data: {firstName: "John", lastName: "Doe"}}, expectedOutput: "DOE, John"}
+				{input: "{data.lastName:toUpperCase}, {data.firstName}", arguments: {data: {firstName: "John", lastName: "Doe"}}, expectedOutput: "DOE, John"},
+				{input: "x{ 0 }x", arguments: ["y"], expectedOutput: "xyx"},
+				{input: "{ firstName } { lastName }", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"},
+				{input: "x{0: toLowerCase }x", arguments: ["Y"], expectedOutput: "xyx"}
 			];
 
 			function runTests(summaryId, resultsId) {
