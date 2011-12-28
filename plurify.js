@@ -1,79 +1,46 @@
 (function() {
 	var plurify = function(input, parameters) {
-		if(input) {
-			var openBracket = input.indexOf("{", 0);
+		return input ? parseFormatString(input, parameters) : "";
+	};
 
-			if(openBracket === -1) {
-				return input;
+	(window["plurify"] = plurify)["operations"] = {};
+
+	function parseExpression(input, parameters) {
+		return input.replace(/^([^:}]*)([:}])([\s\S]*)/, function(match, parameterName, colonOrBracket, restOfInput) {
+			var parameterNameParts = parameterName.split(".");
+			var parameter = parameters;
+
+			for(var i = 0; i < parameterNameParts.length; ++i) {
+				parameter = parameter[parameterNameParts[i]];
 			}
 
-			var position = 0;
-			var builder = [];
-
-			do {
-				var backslashes = 0;
-
-				while(input.charAt(openBracket - backslashes - 1) === "\\") {
-					++backslashes;
-				}
-
-				if(backslashes > 0) {
-					builder.push(input.slice(position, openBracket - backslashes / 2));
-
-					if(backslashes & 1) {
-						builder.push("{");
-						position = openBracket + 1;
+			if(colonOrBracket === ":") {
+				restOfInput = restOfInput.replace(/^([^}]*)}/, function(match, operation) {
+					if(parameter[operation]) {
+						parameter = parameter[operation]();
 					}
 					else {
-						position = parseExpression(input, openBracket, parameters, builder);
+						parameter = plurify["operations"][operation](parameter);
 					}
-				}
-				else {
-					builder.push(input.slice(position, openBracket));
-					position = parseExpression(input, openBracket, parameters, builder);
-				}
 
-				openBracket = input.indexOf("{", position);
+					return "";
+				});
 			}
-			while(openBracket !== -1);
 
-			builder.push(input.slice(position));
-
-			return builder.join("");
-		}
-
-		return "";
+			return parameter + parseFormatString(restOfInput, parameters);
+		});
 	}
 
-	window["plurify"] = plurify;
-	plurify["operations"] = {};
+	function parseFormatString(input, parameters) {
+		return input.replace(/(\\*){([\s\S]*)/, function(match, backslashes, restOfInput) {
+			var unescapedBackslashes = backslashes.slice((backslashes.length + 1) / 2);
 
-	function parseExpression(input, position, parameters, builder) {
-		var closeBracket = input.indexOf("}", position);
-		var colon = input.indexOf(":", position);
-
-		var parameterNameEnd = colon === -1 ? closeBracket : Math.min(closeBracket, colon);
-
-		var parameterNameParts = input.slice(position + 1, parameterNameEnd).split(".");
-		var parameter = parameters;
-
-		for(var i = 0; i < parameterNameParts.length; ++i) {
-			parameter = parameter[parameterNameParts[i]];
-		}
-
-		if(colon !== -1) {
-			var operation = input.slice(colon + 1, closeBracket);
-
-			if(parameter[operation]) {
-				parameter = parameter[operation]();
+			if(backslashes.length & 1) { // "{" is escaped
+				return unescapedBackslashes + "{" + parseFormatString(restOfInput, parameters);
 			}
-			else {
-				parameter = plurify["operations"][operation](parameter);
+			else { // "{" is not escaped
+				return unescapedBackslashes + parseExpression(restOfInput, parameters);
 			}
-		}
-
-		builder.push(parameter);
-
-		return closeBracket + 1;
+		});
 	}
 })();

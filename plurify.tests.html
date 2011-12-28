@@ -39,6 +39,7 @@
 				{input: "x\\{0}x", arguments: null, expectedOutput: "x{0}x"},
 				{input: "x\\\\{0}x", arguments: ["y"], expectedOutput: "x\\yx"},
 				{input: "x\\\\\\{0}x", arguments: null, expectedOutput: "x\\{0}x"},
+				{input: "x\\\\\\\\\\{0}x", arguments: null, expectedOutput: "x\\\\{0}x"},
 				{input: "{data.firstName} {data.lastName}", arguments: {data: {firstName: "John", lastName: "Doe"}}, expectedOutput: "John Doe"},
 				{input: "x{0.value}x", arguments: [{value: "y"}], expectedOutput: "xyx"},
 				{input: "x{0:toLowerCase}x", arguments: ["Y"], expectedOutput: "xyx"},
