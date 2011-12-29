@@ -1,3 +1,7 @@
+/**
+* @license Copyright 2011 krabicezpapundeklu. All rights reserved.
+* See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
+*/
 (function() {
 	var plurify = function(input, parameters) {
 		return input ? parseFormatString(input, parameters) : "";
