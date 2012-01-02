@@ -50,7 +50,8 @@
 				{input: "{ firstName } { lastName }", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"},
 				{input: "x{0: toLowerCase }x", arguments: ["Y"], expectedOutput: "xyx"},
 				{input: "x{0", expectedOutput: "Unterminated format item: {0."},
-				{input: "x\\\\{0", expectedOutput: "Unterminated format item: {0."}
+				{input: "x\\\\{0", expectedOutput: "Unterminated format item: {0."},
+				{input: "x{0:invalid}x", arguments: ["y"], expectedOutput: "Invalid operation: invalid."}
 			];
 
 			function runTests(summaryId, resultsId) {

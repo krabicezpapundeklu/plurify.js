@@ -31,11 +31,13 @@
 
 		if(colonOrBracket === ":") {
 			restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operationName) {
-				if(parameter[operationName]) {
-					parameter = parameter[operationName]();
+				var operation = parameter[operationName] || plurify["operations"][operationName];
+
+				if(operation) {
+					parameter = operation.call(parameter, parameter);
 				}
 				else {
-					parameter = plurify["operations"][operationName](parameter);
+					throw "Invalid operation: " + operationName + ".";
 				}
 
 				return "";
