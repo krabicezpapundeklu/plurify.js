@@ -4,6 +4,8 @@
 */
 (function() {
 	var FormatItemRegex = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/;
+	var FormatStringRegex = /(\\*){([\s\S]*)/;
+	var OperationRegex = /^\s*([^}\s]*)\s*}/;
 
 	var plurify = function(input, parameters) {
 		return input ? parseFormatString(input, parameters) : "";
@@ -30,7 +32,7 @@
 		}
 
 		if(colonOrBracket === ":") {
-			restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operationName) {
+			restOfInput = restOfInput.replace(OperationRegex, function(match, operationName) {
 				var operation = parameter[operationName] || plurify["operations"][operationName];
 
 				if(operation) {
@@ -48,7 +50,7 @@
 	}
 
 	function parseFormatString(input, parameters) {
-		return input.replace(/(\\*){([\s\S]*)/, function(match, backslashes, restOfInput) {
+		return input.replace(FormatStringRegex, function(match, backslashes, restOfInput) {
 			var unescapedBackslashes = backslashes.slice((backslashes.length + 1) / 2);
 
 			if(backslashes.length & 1) { // "{" is escaped
