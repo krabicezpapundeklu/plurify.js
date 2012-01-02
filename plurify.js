@@ -10,29 +10,37 @@
 	(window["plurify"] = plurify)["operations"] = {};
 
 	function parseFormatItem(input, parameters) {
-		return input.replace(/^\s*([^:}\s]*)\s*([:}])([\s\S]*)/, function(match, parameterName, colonOrBracket, restOfInput) {
-			var parameterNameParts = parameterName.split(".");
-			var parameter = parameters;
+		var matches = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/.exec(input);
 
-			for(var i = 0; i < parameterNameParts.length; ++i) {
-				parameter = parameter[parameterNameParts[i]];
-			}
+		if(matches === null) {
+			throw "Unterminated format item: {" + input + ".";
+		}
 
-			if(colonOrBracket === ":") {
-				restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operationName) {
-					if(parameter[operationName]) {
-						parameter = parameter[operationName]();
-					}
-					else {
-						parameter = plurify["operations"][operationName](parameter);
-					}
+		var parameterName = matches[1];
+		var colonOrBracket = matches[2];
+		var restOfInput = matches[3];
 
-					return "";
-				});
-			}
+		var parameterNameParts = parameterName.split(".");
+		var parameter = parameters;
 
-			return parameter + parseFormatString(restOfInput, parameters);
-		});
+		for(var i = 0; i < parameterNameParts.length; ++i) {
+			parameter = parameter[parameterNameParts[i]];
+		}
+
+		if(colonOrBracket === ":") {
+			restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operationName) {
+				if(parameter[operationName]) {
+					parameter = parameter[operationName]();
+				}
+				else {
+					parameter = plurify["operations"][operationName](parameter);
+				}
+
+				return "";
+			});
+		}
+
+		return parameter + parseFormatString(restOfInput, parameters);
 	}
 
 	function parseFormatString(input, parameters) {

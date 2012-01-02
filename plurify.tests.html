@@ -48,7 +48,9 @@
 				{input: "{data.lastName:toUpperCase}, {data.firstName}", arguments: {data: {firstName: "John", lastName: "Doe"}}, expectedOutput: "DOE, John"},
 				{input: "x{ 0 }x", arguments: ["y"], expectedOutput: "xyx"},
 				{input: "{ firstName } { lastName }", arguments: {firstName: "John", lastName: "Doe"}, expectedOutput: "John Doe"},
-				{input: "x{0: toLowerCase }x", arguments: ["Y"], expectedOutput: "xyx"}
+				{input: "x{0: toLowerCase }x", arguments: ["Y"], expectedOutput: "xyx"},
+				{input: "x{0", expectedOutput: "Unterminated format item: {0."},
+				{input: "x\\\\{0", expectedOutput: "Unterminated format item: {0."}
 			];
 
 			function runTests(summaryId, resultsId) {
@@ -60,7 +62,13 @@
 
 				for(var i = 0; i < tests.length; ++i) {
 					var test = tests[i];
-					test.output = plurify(test.input, test.arguments);
+
+					try {
+						test.output = plurify(test.input, test.arguments);
+					}
+					catch(e) {
+						test.output = e;
+					}
 				}
 
 				var duration = new Date() - startDate;
