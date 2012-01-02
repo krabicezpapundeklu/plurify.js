@@ -1,5 +1,5 @@
 /**
-* @license Copyright 2011 krabicezpapundeklu. All rights reserved.
+* @license Copyright 2011-2012 krabicezpapundeklu. All rights reserved.
 * See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
 */
 (function() {
@@ -9,7 +9,7 @@
 
 	(window["plurify"] = plurify)["operations"] = {};
 
-	function parseExpression(input, parameters) {
+	function parseFormatItem(input, parameters) {
 		return input.replace(/^\s*([^:}\s]*)\s*([:}])([\s\S]*)/, function(match, parameterName, colonOrBracket, restOfInput) {
 			var parameterNameParts = parameterName.split(".");
 			var parameter = parameters;
@@ -19,12 +19,12 @@
 			}
 
 			if(colonOrBracket === ":") {
-				restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operation) {
-					if(parameter[operation]) {
-						parameter = parameter[operation]();
+				restOfInput = restOfInput.replace(/^\s*([^}\s]*)\s*}/, function(match, operationName) {
+					if(parameter[operationName]) {
+						parameter = parameter[operationName]();
 					}
 					else {
-						parameter = plurify["operations"][operation](parameter);
+						parameter = plurify["operations"][operationName](parameter);
 					}
 
 					return "";
@@ -43,7 +43,7 @@
 				return unescapedBackslashes + "{" + parseFormatString(restOfInput, parameters);
 			}
 			else { // "{" is not escaped
-				return unescapedBackslashes + parseExpression(restOfInput, parameters);
+				return unescapedBackslashes + parseFormatItem(restOfInput, parameters);
 			}
 		});
 	}
