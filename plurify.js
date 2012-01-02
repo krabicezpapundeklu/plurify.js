@@ -3,6 +3,8 @@
 * See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
 */
 (function() {
+	var FormatItemRegex = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/;
+
 	var plurify = function(input, parameters) {
 		return input ? parseFormatString(input, parameters) : "";
 	};
@@ -10,7 +12,7 @@
 	(window["plurify"] = plurify)["operations"] = {};
 
 	function parseFormatItem(input, parameters) {
-		var matches = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/.exec(input);
+		var matches = FormatItemRegex.exec(input);
 
 		if(matches === null) {
 			throw "Unterminated format item: {" + input + ".";
