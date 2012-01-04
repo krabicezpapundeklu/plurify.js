@@ -1,5 +1,6 @@
 /**
-* @license Copyright 2011-2012 krabicezpapundeklu. All rights reserved.
+* @license plurify.js, 0.9
+* Copyright 2011-2012 krabicezpapundeklu. All rights reserved.
 * See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
 */
 window["plurify"] = (function() {
@@ -19,11 +20,13 @@ window["plurify"] = (function() {
 		var restOfInput = matches[3];
 
 		var parameterNameParts = parameterName.split(".");
-		var parameter = parameters;
+		var parameter = validateParameter(parameters, parameterName);
 
 		for(var i = 0; i < parameterNameParts.length; ++i) {
-			parameter = parameter[parameterNameParts[i]];
+			parameter = validateParameter(parameter[parameterNameParts[i]], parameterName);
 		}
+
+		parameter = parameter || "";
 
 		if(colonOrBracket === ":") {
 			restOfInput = restOfInput.replace(OperationRegex, function(match, operationName) {
@@ -56,8 +59,20 @@ window["plurify"] = (function() {
 		});
 	}
 
+	function validateParameter(parameter, parameterName) {
+		if(typeof parameter === "undefined") {
+			throw "Invalid parameter name: " + parameterName + ".";
+		}
+
+		return parameter;
+	}
+
 	var plurify = function(input, parameters) {
-		return input ? parseFormatString(input, parameters) : "";
+		if(input) {
+			return parseFormatString(input, parameters);
+		}
+
+		throw "Missing format string.";
 	};
 
 	plurify["operations"] = {};

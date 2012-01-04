@@ -30,8 +30,8 @@
 	<body>
 		<script type="text/javascript">
 			var tests = [
-				{expectedOutput: ""},
-				{input: null, arguments: null, expectedOutput: ""},
+				{expectedOutput: "Missing format string."},
+				{input: null, arguments: null, expectedOutput: "Missing format string."},
 				{input: "xxx", arguments: null, expectedOutput: "xxx"},
 				{input: "x{0}x", arguments: ["y"], expectedOutput: "xyx"},
 				{input: "x{0}x{1}x{2}x", arguments: [1, 2, 3], expectedOutput: "x1x2x3x"},
@@ -51,7 +51,14 @@
 				{input: "x{0: toLowerCase }x", arguments: ["Y"], expectedOutput: "xyx"},
 				{input: "x{0", expectedOutput: "Unterminated format item: {0."},
 				{input: "x\\\\{0", expectedOutput: "Unterminated format item: {0."},
-				{input: "x{0:invalid}x", arguments: ["y"], expectedOutput: "Invalid operation: invalid."}
+				{input: "x{0:invalid}x", arguments: ["y"], expectedOutput: "Invalid operation: invalid."},
+				{input: "x{0}x", expectedOutput: "Invalid parameter name: 0."},
+				{input: "x{0}x", arguments: [], expectedOutput: "Invalid parameter name: 0."},
+				{input: "x{abc}x", arguments: {}, expectedOutput: "Invalid parameter name: abc."},
+				{input: "x{abc.def}x", arguments: {}, expectedOutput: "Invalid parameter name: abc.def."},
+				{input: "x{abc.def}x", arguments: {abc: "X"}, expectedOutput: "Invalid parameter name: abc.def."},
+				{input: "x{0}x", arguments: [null], expectedOutput: "xx"},
+				{input: "x{0:toLowerCase}x", arguments: [null], expectedOutput: "xx"}
 			];
 
 			function runTests(summaryId, resultsId) {
