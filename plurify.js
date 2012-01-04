@@ -1,9 +1,9 @@
 /**
-* @license plurify.js, 0.9
+* @license plurify.js, 0.9.1
 * Copyright 2011-2012 krabicezpapundeklu. All rights reserved.
 * See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
 */
-window["plurify"] = (function() {
+plurify = (function() {
 	var FormatItemRegex = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/;
 	var FormatStringRegex = /(\\*){([\s\S]*)/;
 	var OperationRegex = /^\s*([^}\s]*)\s*}/;
