@@ -2,16 +2,10 @@
 * @license Copyright 2011-2012 krabicezpapundeklu. All rights reserved.
 * See https://raw.github.com/krabicezpapundeklu/plurify.js/master/LICENSE for full license text.
 */
-(function() {
+window["plurify"] = (function() {
 	var FormatItemRegex = /^\s*([^:}\s]*)\s*([:}])([\s\S]*)/;
 	var FormatStringRegex = /(\\*){([\s\S]*)/;
 	var OperationRegex = /^\s*([^}\s]*)\s*}/;
-
-	var plurify = function(input, parameters) {
-		return input ? parseFormatString(input, parameters) : "";
-	};
-
-	(window["plurify"] = plurify)["operations"] = {};
 
 	function parseFormatItem(input, parameters) {
 		var matches = FormatItemRegex.exec(input);
@@ -61,4 +55,12 @@
 			}
 		});
 	}
+
+	var plurify = function(input, parameters) {
+		return input ? parseFormatString(input, parameters) : "";
+	};
+
+	plurify["operations"] = {};
+
+	return plurify;
 })();
